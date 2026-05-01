@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 import { ChevronDown, Utensils, MapPin, Star } from 'lucide-react';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+
 import TrainLine from '@/components/TrainLine';
-import { westernLineStations, centralLineStations, stations } from '@/data/stationsData';
+import { FastTrackLineStations, SlowTrackLineStations, stations } from '@/data/stationsData';
 
 const Index = () => {
   const totalRestaurants = stations.reduce((acc, s) => acc + s.restaurants.length, 0);
@@ -13,46 +13,11 @@ const Index = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center gradient-hero overflow-hidden pt-20">
-        {/* Floating food doodles */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <motion.span 
-            className="absolute top-20 left-10 text-6xl opacity-20"
-            animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }}
-            transition={{ duration: 4, repeat: Infinity }}
-          >
-            🍛
-          </motion.span>
-          <motion.span 
-            className="absolute top-40 right-20 text-5xl opacity-20"
-            animate={{ y: [0, -15, 0], rotate: [0, -10, 0] }}
-            transition={{ duration: 3.5, repeat: Infinity, delay: 0.5 }}
-          >
-            🥘
-          </motion.span>
-          <motion.span 
-            className="absolute bottom-40 left-20 text-7xl opacity-20"
-            animate={{ y: [0, -25, 0] }}
-            transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-          >
-            🚃
-          </motion.span>
-          <motion.span 
-            className="absolute bottom-20 right-10 text-5xl opacity-20"
-            animate={{ y: [0, -18, 0], rotate: [0, 15, 0] }}
-            transition={{ duration: 4.5, repeat: Infinity, delay: 0.8 }}
-          >
-            🍜
-          </motion.span>
-          <motion.span 
-            className="absolute top-1/2 left-1/4 text-4xl opacity-15"
-            animate={{ y: [0, -12, 0] }}
-            transition={{ duration: 3, repeat: Infinity, delay: 1.2 }}
-          >
-            🥙
-          </motion.span>
-        </div>
-
+      {/* Hero Section */}
+<section
+  id="home"
+  className="relative min-h-screen flex items-center justify-center gradient-hero overflow-hidden pt-20"
+>
         <div className="container mx-auto px-4 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -60,14 +25,11 @@ const Index = () => {
             transition={{ duration: 0.8 }}
           >
             <h1 className="text-5xl md:text-7xl font-bold font-montserrat mb-6">
-              <span className="text-gradient">Mumbai</span>
+              <span className="text-gradient">Cravingsthan</span>
               <br />
-              <span className="text-foreground">Station Bites</span>
+              <span className="text-foreground">Crave it. Find it. Love it.</span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-8">
-              Discover the best food spots at every Mumbai local station. 
-              From iconic Irani cafes to legendary street food.
-            </p>
+           
 
             {/* Stats */}
             <div className="flex flex-wrap justify-center gap-8 mb-12">
@@ -108,8 +70,11 @@ const Index = () => {
       </section>
 
       {/* Train Navigation Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
+      
+<section id="stations" className="py-20 bg-background">
+
+  <div className="mx-auto px-4">
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -131,9 +96,9 @@ const Index = () => {
             viewport={{ once: true }}
           >
             <TrainLine 
-              stations={westernLineStations} 
-              lineName="🚆 Western Line" 
-              lineColor="western"
+              stations={FastTrackLineStations} 
+              lineName="🚆 FastTrack Line" 
+              lineColor="FastTrack"
             />
           </motion.div>
 
@@ -144,9 +109,9 @@ const Index = () => {
             viewport={{ once: true }}
           >
             <TrainLine 
-              stations={centralLineStations} 
-              lineName="🚆 Central Line" 
-              lineColor="central"
+              stations={SlowTrackLineStations} 
+              lineName="🚆 SlowTrack Line" 
+              lineColor= "SlowTrack"
             />
           </motion.div>
         </div>
@@ -162,13 +127,13 @@ const Index = () => {
             className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4">
-              Why <span className="text-gradient">Mumbai Station Bites</span>?
+              Why <span className="text-gradient">Cravingsthan</span>?
             </h2>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: '🗺️', title: 'Easy Navigation', desc: 'Find food spots by your nearest station' },
+              { icon: '🗺️', title: 'Easy Navigation', desc: 'Find best food spots by your nearest station' },
               { icon: '⭐', title: 'Curated Reviews', desc: 'Honest ratings from local foodies' },
               { icon: '📅', title: 'Quick Booking', desc: 'Reserve your table in seconds' },
             ].map((item, i) => (
@@ -189,7 +154,7 @@ const Index = () => {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 };

@@ -21,13 +21,13 @@ const RestaurantCard = ({ restaurant, stationId, index = 0 }: RestaurantCardProp
     >
       <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border-border/50 bg-card">
         <div className="relative h-48 overflow-hidden">
-          <img 
-            src={restaurant.image} 
+          <img
+            src={restaurant.image}
             alt={restaurant.name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent" />
-          
+
           <div className="absolute top-3 right-3">
             <Badge className="bg-gold text-charcoal font-semibold gap-1">
               <Star className="w-3 h-3 fill-current" />
@@ -43,21 +43,24 @@ const RestaurantCard = ({ restaurant, stationId, index = 0 }: RestaurantCardProp
         </div>
 
         <CardContent className="p-5">
-          <div className="flex items-start justify-between mb-3">
-            <h3 className="text-lg font-bold font-montserrat text-foreground group-hover:text-primary transition-colors">
-              {restaurant.name}
-            </h3>
-            <span className="text-primary font-semibold">{restaurant.priceRange}</span>
-          </div>
+          <h3 className="text-lg font-bold font-montserrat mb-2">
+            {restaurant.name}
+          </h3>
 
-          <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+          <p className="text-muted-foreground text-sm mb-2 line-clamp-2">
             {restaurant.description}
           </p>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 text-muted-foreground text-xs">
+          {restaurant.address && (
+            <div className="flex items-center gap-1 text-muted-foreground text-xs mb-3">
               <MapPin className="w-3 h-3" />
-              <span>{restaurant.dishes.length} dishes</span>
+              <span className="line-clamp-1">{restaurant.address}</span>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between">
+            <div className="text-muted-foreground text-xs">
+              {restaurant.dishes.length} dishes
             </div>
 
             <Link to={`/station/${stationId}/restaurant/${restaurant.id}`}>
@@ -73,3 +76,4 @@ const RestaurantCard = ({ restaurant, stationId, index = 0 }: RestaurantCardProp
 };
 
 export default RestaurantCard;
+

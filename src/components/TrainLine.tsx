@@ -5,29 +5,29 @@ import { motion } from 'framer-motion';
 interface TrainLineProps {
   stations: Station[];
   lineName: string;
-  lineColor: 'western' | 'central';
+  lineColor: 'FastTrack' | 'SlowTrack';
 }
 
 const TrainLine = ({ stations, lineName, lineColor }: TrainLineProps) => {
-  const isWestern = lineColor === 'western';
+  const isFast = lineColor === 'FastTrack';
   
   return (
     <div className="w-full py-8">
       <div className="flex items-center gap-3 mb-6">
-        <div className={`w-4 h-4 rounded-full ${isWestern ? 'bg-primary' : 'bg-destructive'}`} />
+        <div className={`w-4 h-4 rounded-full ${isFast  ? 'bg-red-500' : 'bg-blue-500'}`} />
         <h3 className="text-2xl font-bold font-montserrat text-foreground">
           {lineName}
         </h3>
-        <div className={`flex-1 h-1 rounded-full ${isWestern ? 'bg-primary/30' : 'bg-destructive/30'}`} />
+        <div className={`flex-1 h-1 rounded-full ${isFast ? 'bg-red-500/30' : 'bg-blue-500/30'}`} />
       </div>
 
       <div className="relative">
         {/* Track line */}
         <div className={`absolute top-1/2 left-0 right-0 h-2 -translate-y-1/2 rounded-full ${
-          isWestern ? 'bg-primary/20' : 'bg-destructive/20'
+          isFast ? 'bg-red-500/20' : 'bg-blue-500/20'
         }`}>
           <div className={`h-full rounded-full ${
-            isWestern ? 'bg-primary' : 'bg-destructive'
+            isFast ? 'bg-red-500' : 'bg-blue-500'
           } opacity-50`} style={{ width: '100%' }} />
         </div>
 
@@ -47,7 +47,8 @@ const TrainLine = ({ stations, lineName, lineColor }: TrainLineProps) => {
         </motion.div>
 
         {/* Station nodes */}
-        <div className="relative flex justify-between items-center py-8 overflow-x-auto">
+        <div className="relative overflow-x-auto">
+  <div className="flex items-center gap-16 py-8 w-max px-8">
           {stations.map((station, index) => (
             <Link 
               key={station.id}
@@ -60,14 +61,14 @@ const TrainLine = ({ stations, lineName, lineColor }: TrainLineProps) => {
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.2 }}
                 className={`relative w-16 h-16 rounded-2xl ${
-                  isWestern ? 'bg-primary' : 'bg-destructive'
+                  isFast? 'bg-red-500' : 'bg-blue-500'
                 } flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 cursor-pointer`}
               >
                 <span className="text-2xl">🚃</span>
                 
                 {/* Pulse effect */}
                 <div className={`absolute inset-0 rounded-2xl ${
-                  isWestern ? 'bg-primary' : 'bg-destructive'
+                  isFast ? 'bg-red-500' : 'bg-blue-500'
                 } animate-ping opacity-20`} />
               </motion.div>
 
@@ -86,6 +87,7 @@ const TrainLine = ({ stations, lineName, lineColor }: TrainLineProps) => {
               </motion.div>
             </Link>
           ))}
+          </div>
         </div>
       </div>
     </div>

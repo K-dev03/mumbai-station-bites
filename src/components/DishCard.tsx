@@ -39,9 +39,6 @@ const DishCard = ({ dish, index = 0 }: DishCardProps) => {
           <h4 className="font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
             {dish.name}
           </h4>
-          <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
-            {dish.description}
-          </p>
           <div className="flex items-center justify-between">
             <span className="text-lg font-bold text-primary">₹{dish.price}</span>
           </div>

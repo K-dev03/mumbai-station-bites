@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, UserPlus, Train } from 'lucide-react';
+import { Train } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,142 +10,168 @@ import { toast } from 'sonner';
 
 const SignupPage = () => {
   const navigate = useNavigate();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const [isLoading, setIsLoading] = useState(false);
 
+  // ================= EMAIL AUTO FIX =================
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+
+    if (value.includes('@')) {
+      const [part] = value.split('@');
+      value = part + '@gmail.com';
+    }
+
+    setEmail(value);
+  };
+
+  // ================= PASSWORD RULES (SIMPLIFIED) =================
+  const isLengthValid = password.length >= 8;
+  const hasUpper = /[A-Z]/.test(password);
+  const hasNumberOrSpecial = /(\d|[@#$%^&*!])/.test(password);
+
+  const isPasswordValid =
+    isLengthValid && hasUpper && hasNumberOrSpecial;
+
+  // ================= SUBMIT =================
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!name || !email || !password) {
+      toast.error('All fields are required');
+      return;
+    }
+
+    if (!email.includes('@gmail.com')) {
+      toast.error('Only Gmail allowed');
+      return;
+    }
+
+    if (!isPasswordValid) {
+      toast.error('Password does not meet requirements');
+      return;
+    }
+
     setIsLoading(true);
 
-    // Simulate signup - will integrate with Supabase later
-    setTimeout(() => {
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message || 'Signup failed');
+        return;
+      }
+
+      toast.success('Account created successfully!');
+      navigate('/login');
+    } catch (error) {
+      toast.error('Server error');
+    } finally {
       setIsLoading(false);
-      toast.success('Account created successfully! Welcome aboard.');
-      navigate('/');
-    }, 1500);
+    }
   };
 
   return (
     <div className="min-h-screen gradient-hero flex items-center justify-center p-4">
-      {/* Background elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <motion.span 
-          className="absolute top-20 right-10 text-6xl opacity-10"
-          animate={{ y: [0, -20, 0] }}
-          transition={{ duration: 4, repeat: Infinity }}
-        >
-          🥘
-        </motion.span>
-        <motion.span 
-          className="absolute bottom-20 left-20 text-7xl opacity-10"
-          animate={{ y: [0, -15, 0] }}
-          transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-        >
-          🚃
-        </motion.span>
-      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
-        <Card className="shadow-2xl border-border/50">
-          <CardHeader className="text-center pb-2">
-            <Link to="/" className="inline-flex items-center justify-center gap-3 mb-4">
-              <div className="w-14 h-14 rounded-full gradient-primary flex items-center justify-center animate-pulse-glow">
-                <Train className="w-7 h-7 text-primary-foreground" />
-              </div>
-            </Link>
-            <h1 className="text-2xl font-bold font-montserrat">Create Account</h1>
-            <p className="text-muted-foreground">Join the Mumbai foodie community</p>
+
+        <Card>
+
+          <CardHeader className="text-center">
+            <div className="w-14 h-14 mx-auto gradient-primary flex items-center justify-center rounded-full">
+              <Train className="text-white" />
+            </div>
+            <h1 className="text-2xl font-bold mt-2">Create Account</h1>
           </CardHeader>
 
-          <CardContent className="pt-6">
+          <CardContent>
+
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="John Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
+
+              {/* NAME */}
+              <div>
+                <Label>Name</Label>
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
+              {/* EMAIL */}
+              <div>
+                <Label>Email (Gmail only)</Label>
+                <Input
+                  value={email}
+                  onChange={handleEmailChange}
+                />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
-                    required
-                    minLength={6}
-                  />
-                </div>
+              {/* PASSWORD */}
+              <div>
+                <Label>Password</Label>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+
+                {/* 🔥 SIMPLIFIED RULES */}
+                <ul className="text-xs mt-2 space-y-1">
+
+                  <li className={isLengthValid ? "text-green-500" : "text-red-500"}>
+                    • At least 8 characters
+                  </li>
+
+                  <li className={hasUpper ? "text-green-500" : "text-red-500"}>
+                    • At least 1 uppercase letter
+                  </li>
+
+                  <li className={hasNumberOrSpecial ? "text-green-500" : "text-red-500"}>
+                    • At least 1 number or special character
+                  </li>
+
+                </ul>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full gradient-primary hover:opacity-90 text-lg py-6"
-                disabled={isLoading}
+              {/* BUTTON */}
+              <Button
+                disabled={isLoading || !isPasswordValid}
+                className="w-full"
               >
-                {isLoading ? (
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                  >
-                    ⏳
-                  </motion.div>
-                ) : (
-                  <>
-                    <UserPlus className="w-5 h-5 mr-2" />
-                    Sign Up
-                  </>
-                )}
+                {isLoading ? 'Creating...' : 'Sign Up'}
               </Button>
+
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-muted-foreground">
-                Already have an account?{' '}
-                <Link to="/login" className="text-primary font-semibold hover:underline">
-                  Login
-                </Link>
-              </p>
-            </div>
+            <p className="text-center mt-4 text-sm">
+              Already have account?{' '}
+              <Link to="/login" className="text-primary">
+                Login
+              </Link>
+            </p>
+
           </CardContent>
         </Card>
+
       </motion.div>
+
     </div>
   );
 };

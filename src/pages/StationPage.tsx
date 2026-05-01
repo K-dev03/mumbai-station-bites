@@ -2,7 +2,6 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, MapPin, Train } from 'lucide-react';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import RestaurantCard from '@/components/RestaurantCard';
 import { getStationById } from '@/data/stationsData';
 import { Button } from '@/components/ui/button';
@@ -29,54 +28,38 @@ const StationPage = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative h-[50vh] min-h-[400px] pt-20">
-        <div className="absolute inset-0">
-          <img 
-            src={station.image} 
-            alt={station.name}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-transparent" />
-        </div>
+      {/* Hero Section */}
+<section className="pt-20">
+  {/* Image Only */}
+  <div className="relative h-[50vh] min-h-[350px]">
+    <img
+      src={station.image}
+      alt={station.name}
+      className="w-full h-full object-cover"
+    />
+  </div>
 
-        <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-end pb-12">
-          <Link to="/" className="inline-flex items-center gap-2 text-cream/80 hover:text-cream mb-6 transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-            Back to all stations
-          </Link>
+  {/* Content Below Image */}
+  <div className="container mx-auto px-4 py-8">
+    <Link
+      to="/"
+      className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors"
+    >
+      <ArrowLeft className="w-5 h-5" />
+      Back to all stations
+    </Link>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                station.line === 'western' ? 'bg-primary' : 'bg-destructive'
-              }`}>
-                <Train className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                station.line === 'western' 
-                  ? 'bg-primary/20 text-primary' 
-                  : 'bg-destructive/20 text-destructive'
-              }`}>
-                {station.line === 'western' ? 'Western Line' : 'Central Line'}
-              </span>
-            </div>
+    <h1 className="text-4xl md:text-5xl font-bold font-montserrat mb-4">
+      {station.name} 
+    </h1>
 
-            <h1 className="text-4xl md:text-6xl font-bold font-montserrat text-cream mb-4">
-              {station.name} Station
-            </h1>
+    <div className="flex items-center gap-4 text-muted-foreground">
+      <MapPin className="w-5 h-5" />
+      <span>{station.restaurants.length} Restaurants</span>
+    </div>
+  </div>
+</section>
 
-            <div className="flex items-center gap-4 text-cream/80">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5" />
-                <span>{station.restaurants.length} restaurants nearby</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* Restaurants Section */}
       <section className="py-16">
@@ -102,7 +85,7 @@ const StationPage = () => {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 };
